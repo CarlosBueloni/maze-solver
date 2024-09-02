@@ -31,7 +31,10 @@ class Window():
 def main():
     win = Window(800, 600)
     cell = Cell(win)
-    cell.draw(Point(10,20), Point(110, 120))
+    cell2 = Cell(win)
+    cell.draw(Point(10,20), Point(60, 70))
+    cell2.draw(Point(60,20), Point(110, 70))
+    cell.draw_move(cell2)
     win.wait_for_close()
 
 if __name__ == "__main__":
