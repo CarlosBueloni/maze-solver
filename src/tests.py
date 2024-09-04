@@ -29,6 +29,26 @@ class Tests(unittest.TestCase):
                 False,
         )
 
+    def test_maze_reset_visited_first(self):
+        m1 = Maze(0, 0, 10, 15, 10, 10)
+        self.assertEqual(
+                m1._cells[0][0].visited,
+                False,
+        )
+
+    def test_maze_reset_visited_last(self):
+        m1 = Maze(0, 0, 10, 15, 10, 10)
+        self.assertEqual(
+                m1._cells[-1][-1].visited,
+                False,
+        )
+
+    def test_maze_reset_visited(self):
+        m1 = Maze(0, 0, 10, 15, 10, 10)
+        self.assertEqual(
+                m1._cells[2][3].visited,
+                False,
+        )
 
 
 if __name__ == "__main__":

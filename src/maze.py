@@ -34,6 +34,7 @@ class Maze():
                 self._draw_cell(i, j)
         self._break_entrance_and_exit()
         self._break_walls_r(0,0)
+        self._reset_cells_visited()
 
     def _draw_cell(self, i, j):
         if self._win is None:
@@ -85,6 +86,10 @@ class Maze():
                 self._cells[dir[0]][dir[1]].has_top_wall = False
             self._break_walls_r(dir[0],dir[1])
 
+    def _reset_cells_visited(self):
+        for i in range(len(self._cells)):
+            for j in range(len(self._cells[0])):
+                    self._cells[i][j].visited = False
 
     def _animate(self):
         if self._win is None:
