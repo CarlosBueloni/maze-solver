@@ -1,6 +1,8 @@
 from line import Point
 from cell import Cell
 from time import sleep
+import random
+
 class Maze():
     def __init__(
             self,
@@ -11,6 +13,7 @@ class Maze():
             cell_size_x,
             cell_size_y,
             win=None,
+            seed=None,
     ):
         self._cells = []
         self._x1 = x1
@@ -20,6 +23,8 @@ class Maze():
         self._cell_size_x = cell_size_x
         self._cell_size_y = cell_size_y
         self._win = win
+        if seed is not None:
+            random.seed(seed)
         self._create_cells()
 
     def _create_cells(self):
@@ -28,6 +33,7 @@ class Maze():
             for j in range(self._num_rows):
                 self._draw_cell(i, j)
         self._break_entrance_and_exit()
+        self._break_walls_r(0,0)
 
     def _draw_cell(self, i, j):
         if self._win is None:
@@ -44,6 +50,41 @@ class Maze():
         self._cells[-1][-1].has_bottom_wall = False
         self._draw_cell(0,0)
         self._draw_cell(-1, -1)
+
+    def _break_walls_r(self, i, j):
+        self._cells[i][j].visited = True
+        while True:
+            to_visit = []
+            if i-1 >= 0:
+                if not self._cells[i-1][j].visited:
+                    to_visit.append([i-1, j])
+            if i+1 < self._num_cols:
+                if not self._cells[i+1][j].visited:
+                    to_visit.append([i+1, j])
+            if j-1 >= 0:
+                if not self._cells[i][j-1].visited:
+                    to_visit.append([i, j-1])
+            if j+1 < self._num_rows:
+                if not self._cells[i][j+1].visited:
+                    to_visit.append([i, j+1])
+            if len(to_visit) == 0:
+                self._draw_cell(i,j)
+                return 
+            dir = to_visit[random.randrange(0, len(to_visit))]
+            if dir[0] < i:
+                self._cells[i][j].has_left_wall = False
+                self._cells[dir[0]][dir[1]].has_right_wall = False
+            elif dir[0] > i:
+                self._cells[i][j].has_right_wall = False
+                self._cells[dir[0]][dir[1]].has_left_wall = False
+            elif dir[1] < j:
+                self._cells[i][j].has_top_wall = False
+                self._cells[dir[0]][dir[1]].has_bottom_wall = False
+            elif dir[1] > j:
+                self._cells[i][j].has_bottom_wall = False
+                self._cells[dir[0]][dir[1]].has_top_wall = False
+            self._break_walls_r(dir[0],dir[1])
+
 
     def _animate(self):
         if self._win is None:
